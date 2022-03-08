@@ -8,8 +8,14 @@
  */
 
 #include "execute.h"
+#include "command.h"
 
+#include <stdlib.h>
 #include <stdio.h>
+#include <limits.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 #include "quash.h"
 
@@ -17,7 +23,7 @@
 /**
  * @brief Note calls to any function that requires implementation
  */
-#define IMPLEMENT_ME()                                                  \
+#define IMPLEMENT_ME() \
   fprintf(stderr, "IMPLEMENT ME: %s(line %d): %s()\n", __FILE__, __LINE__, __FUNCTION__)
 
 /***************************************************************************
@@ -25,7 +31,8 @@
  ***************************************************************************/
 
 // Return a string containing the current working directory.
-char* get_current_directory(bool* should_free) {
+char *get_current_directory(bool *should_free)
+{
   // TODO: Get the current working directory. This will fix the prompt path.
   // HINT: This should be pretty simple
   IMPLEMENT_ME();
@@ -37,21 +44,27 @@ char* get_current_directory(bool* should_free) {
 }
 
 // Returns the value of an environment variable env_var
-const char* lookup_env(const char* env_var) {
+const char *lookup_env(const char *env_var)
+{
   // TODO: Lookup environment variables. This is required for parser to be able
   // to interpret variables from the command line and display the prompt
   // correctly
   // HINT: This should be pretty simple
   IMPLEMENT_ME();
 
-  // TODO: Remove warning silencers
-  (void) env_var; // Silence unused variable warning
+  char *myEnv = getenv(env_var);
 
-  return "???";
+  // return myEnv
+
+  // TODO: Remove warning silencers
+  //(void) env_var; // Silence unused variable warning
+
+  return myEnv;
 }
 
 // Check the status of background jobs
-void check_jobs_bg_status() {
+void check_jobs_bg_status()
+{
   // TODO: Check on the statuses of all processes belonging to all background
   // jobs. This function should remove jobs from the jobs queue once all
   // processes belonging to a job have completed.
@@ -63,19 +76,22 @@ void check_jobs_bg_status() {
 
 // Prints the job id number, the process id of the first process belonging to
 // the Job, and the command string associated with this job
-void print_job(int job_id, pid_t pid, const char* cmd) {
+void print_job(int job_id, pid_t pid, const char *cmd)
+{
   printf("[%d]\t%8d\t%s\n", job_id, pid, cmd);
   fflush(stdout);
 }
 
 // Prints a start up message for background processes
-void print_job_bg_start(int job_id, pid_t pid, const char* cmd) {
+void print_job_bg_start(int job_id, pid_t pid, const char *cmd)
+{
   printf("Background job started: ");
   print_job(job_id, pid, cmd);
 }
 
 // Prints a completion message followed by the print job
-void print_job_bg_complete(int job_id, pid_t pid, const char* cmd) {
+void print_job_bg_complete(int job_id, pid_t pid, const char *cmd)
+{
   printf("Completed: \t");
   print_job(job_id, pid, cmd);
 }
@@ -85,16 +101,17 @@ void print_job_bg_complete(int job_id, pid_t pid, const char* cmd) {
  ***************************************************************************/
 // Run a program reachable by the path environment variable, relative path, or
 // absolute path
-void run_generic(GenericCommand cmd) {
+void run_generic(GenericCommand cmd)
+{
   // Execute a program with a list of arguments. The `args` array is a NULL
   // terminated (last string is always NULL) list of strings. The first element
   // in the array is the executable
-  char* exec = cmd.args[0];
-  char** args = cmd.args;
+  char *exec = cmd.args[0];
+  char **args = cmd.args;
 
   // TODO: Remove warning silencers
-  (void) exec; // Silence unused variable warning
-  (void) args; // Silence unused variable warning
+  (void)exec; // Silence unused variable warning
+  (void)args; // Silence unused variable warning
 
   // TODO: Implement run generic
   IMPLEMENT_ME();
@@ -103,13 +120,14 @@ void run_generic(GenericCommand cmd) {
 }
 
 // Print strings
-void run_echo(EchoCommand cmd) {
+void run_echo(EchoCommand cmd)
+{
   // Print an array of strings. The args array is a NULL terminated (last
   // string is always NULL) list of strings.
-  char** str = cmd.args;
+  char **str = cmd.args;
 
   // TODO: Remove warning silencers
-  (void) str; // Silence unused variable warning
+  (void)str; // Silence unused variable warning
 
   // TODO: Implement echo
   IMPLEMENT_ME();
@@ -119,14 +137,15 @@ void run_echo(EchoCommand cmd) {
 }
 
 // Sets an environment variable
-void run_export(ExportCommand cmd) {
+void run_export(ExportCommand cmd)
+{
   // Write an environment variable
-  const char* env_var = cmd.env_var;
-  const char* val = cmd.val;
+  const char *env_var = cmd.env_var;
+  const char *val = cmd.val;
 
   // TODO: Remove warning silencers
-  (void) env_var; // Silence unused variable warning
-  (void) val;     // Silence unused variable warning
+  (void)env_var; // Silence unused variable warning
+  (void)val;     // Silence unused variable warning
 
   // TODO: Implement export.
   // HINT: This should be quite simple.
@@ -134,12 +153,14 @@ void run_export(ExportCommand cmd) {
 }
 
 // Changes the current working directory
-void run_cd(CDCommand cmd) {
+void run_cd(CDCommand cmd)
+{
   // Get the directory name
-  const char* dir = cmd.dir;
+  const char *dir = cmd.dir;
 
   // Check if the directory is valid
-  if (dir == NULL) {
+  if (dir == NULL)
+  {
     perror("ERROR: Failed to resolve path");
     return;
   }
@@ -153,21 +174,22 @@ void run_cd(CDCommand cmd) {
 }
 
 // Sends a signal to all processes contained in a job
-void run_kill(KillCommand cmd) {
+void run_kill(KillCommand cmd)
+{
   int signal = cmd.sig;
   int job_id = cmd.job;
 
   // TODO: Remove warning silencers
-  (void) signal; // Silence unused variable warning
-  (void) job_id; // Silence unused variable warning
+  (void)signal; // Silence unused variable warning
+  (void)job_id; // Silence unused variable warning
 
   // TODO: Kill all processes associated with a background job
   IMPLEMENT_ME();
 }
 
-
 // Prints the current working directory to stdout
-void run_pwd() {
+void run_pwd()
+{
   // TODO: Print the current working directory
   IMPLEMENT_ME();
 
@@ -176,7 +198,8 @@ void run_pwd() {
 }
 
 // Prints all background jobs currently in the job list to stdout
-void run_jobs() {
+void run_jobs()
+{
   // TODO: Print background jobs
   IMPLEMENT_ME();
 
@@ -199,10 +222,12 @@ void run_jobs() {
  *
  * @sa Command
  */
-void child_run_command(Command cmd) {
+void child_run_command(Command cmd)
+{
   CommandType type = get_command_type(cmd);
 
-  switch (type) {
+  switch (type)
+  {
   case GENERIC:
     run_generic(cmd.generic);
     break;
@@ -242,10 +267,12 @@ void child_run_command(Command cmd) {
  *
  * @sa Command
  */
-void parent_run_command(Command cmd) {
+void parent_run_command(Command cmd)
+{
   CommandType type = get_command_type(cmd);
 
-  switch (type) {
+  switch (type)
+  {
   case EXPORT:
     run_export(cmd.export);
     break;
@@ -286,39 +313,42 @@ void parent_run_command(Command cmd) {
  *
  * @sa Command CommandHolder
  */
-void create_process(CommandHolder holder) {
+void create_process(CommandHolder holder)
+{
   // Read the flags field from the parser
-  bool p_in  = holder.flags & PIPE_IN;
+  bool p_in = holder.flags & PIPE_IN;
   bool p_out = holder.flags & PIPE_OUT;
-  bool r_in  = holder.flags & REDIRECT_IN;
+  bool r_in = holder.flags & REDIRECT_IN;
   bool r_out = holder.flags & REDIRECT_OUT;
   bool r_app = holder.flags & REDIRECT_APPEND; // This can only be true if r_out
                                                // is true
 
   // TODO: Remove warning silencers
-  (void) p_in;  // Silence unused variable warning
-  (void) p_out; // Silence unused variable warning
-  (void) r_in;  // Silence unused variable warning
-  (void) r_out; // Silence unused variable warning
-  (void) r_app; // Silence unused variable warning
+  (void)p_in;  // Silence unused variable warning
+  (void)p_out; // Silence unused variable warning
+  (void)r_in;  // Silence unused variable warning
+  (void)r_out; // Silence unused variable warning
+  (void)r_app; // Silence unused variable warning
 
   // TODO: Setup pipes, redirects, and new process
   IMPLEMENT_ME();
 
-  //parent_run_command(holder.cmd); // This should be done in the parent branch of
-                                  // a fork
-  //child_run_command(holder.cmd); // This should be done in the child branch of a fork
+  // parent_run_command(holder.cmd); // This should be done in the parent branch of
+  //  a fork
+  // child_run_command(holder.cmd); // This should be done in the child branch of a fork
 }
 
 // Run a list of commands
-void run_script(CommandHolder* holders) {
+void run_script(CommandHolder *holders)
+{
   if (holders == NULL)
     return;
 
   check_jobs_bg_status();
 
   if (get_command_holder_type(holders[0]) == EXIT &&
-      get_command_holder_type(holders[1]) == EOC) {
+      get_command_holder_type(holders[1]) == EOC)
+  {
     end_main_loop();
     return;
   }
@@ -329,12 +359,14 @@ void run_script(CommandHolder* holders) {
   for (int i = 0; (type = get_command_holder_type(holders[i])) != EOC; ++i)
     create_process(holders[i]);
 
-  if (!(holders[0].flags & BACKGROUND)) {
+  if (!(holders[0].flags & BACKGROUND))
+  {
     // Not a background Job
     // TODO: Wait for all processes under the job to complete
     IMPLEMENT_ME();
   }
-  else {
+  else
+  {
     // A background job.
     // TODO: Push the new job to the job queue
     IMPLEMENT_ME();
