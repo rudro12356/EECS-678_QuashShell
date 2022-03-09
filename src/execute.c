@@ -18,6 +18,7 @@
 #include <sys/wait.h>
 
 #include "quash.h"
+#include "deque.h"
 
 // Remove this and all expansion calls to it
 /**
