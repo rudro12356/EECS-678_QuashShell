@@ -51,7 +51,7 @@ const char *lookup_env(const char *env_var)
   // to interpret variables from the command line and display the prompt
   // correctly
   // HINT: This should be pretty simple
-  IMPLEMENT_ME();
+  // IMPLEMENT_ME();
 
   char *myEnv = getenv(env_var);
 
@@ -125,13 +125,26 @@ void run_echo(EchoCommand cmd)
 {
   // Print an array of strings. The args array is a NULL terminated (last
   // string is always NULL) list of strings.
+  // implementing echo - mark
+  IMPLEMENT_ME();
+
   char **str = cmd.args;
 
-  // TODO: Remove warning silencers
-  (void)str; // Silence unused variable warning
+  int k = 1;
 
-  // TODO: Implement echo
-  IMPLEMENT_ME();
+  // TODO: Remove warning silencers
+  //(void)str; // Silence unused variable warning
+  while (cmd.args[k - 1] != NULL)
+  {
+    printf("%*s%s ", 0, "", *str);
+    *str = cmd.args[k];
+
+    // incrementing k
+    k++;
+  }
+
+  // std::cout << endl;
+  printf("\n");
 
   // Flush the buffer before returning
   fflush(stdout);
@@ -141,16 +154,19 @@ void run_echo(EchoCommand cmd)
 void run_export(ExportCommand cmd)
 {
   // Write an environment variable
+  // implementing export - mark
   const char *env_var = cmd.env_var;
   const char *val = cmd.val;
 
   // TODO: Remove warning silencers
-  (void)env_var; // Silence unused variable warning
-  (void)val;     // Silence unused variable warning
+  //(void)env_var; // Silence unused variable warning
+  //(void)val;     // Silence unused variable warning
 
   // TODO: Implement export.
   // HINT: This should be quite simple.
   IMPLEMENT_ME();
+
+  setenv(env_var, val, 1);
 }
 
 // Changes the current working directory
