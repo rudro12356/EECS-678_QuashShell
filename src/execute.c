@@ -22,6 +22,33 @@
 #include "quash.h"
 #include "deque.h"
 
+// reading and writing from pipes
+#define READ_END 0
+#define WRITE_END 1
+
+// making process identifier queue
+IMPLEMENT_DEQUE_STRUCT(pid_queue, pid_t);
+IMPLEMENT_DEQUE(pid_queue, pid_t);
+pid_queue p_q;
+
+// declaring struct
+struct theJob
+{
+  int jobID;
+  char *cmd;
+  pid_queue p_q;
+  pid_t pid;
+} theJob;
+
+// creating job queue
+int numOfJob = 1;
+IMPLEMENT_DEQUE_STRUCT(job_queue, struct theJob);
+IMPLEMENT_DEQUE(job_queue, struct theJob);
+job_queue j_q;
+
+bool init;
+// static int pipes[2][2];
+
 // Remove this and all expansion calls to it
 /**
  * @brief Note calls to any function that requires implementation
@@ -76,6 +103,36 @@ void check_jobs_bg_status()
 
   // TODO: Once jobs are implemented, uncomment and fill the following line
   // print_job_bg_complete(job_id, pid, cmd);
+  int numOfJob = length_job_queue(&j_q);
+
+  for (int i = 0; i < numOfJob; i++)
+  {
+    struct theJob currentJob = pop_front_job_queue(&j_q);
+
+    int numOfPids = length_pid_queue(&currentJob.p_q);
+
+    pid_t atFront = peek_front_pid_queue(&currentJob.p_q);
+
+    for (int j = 0; j < numOfPids; j++)
+    {
+      pid_t currentPid = pop_front_pid_queue(&currentJob.p_q);
+
+      int theStatus;
+
+      if (waitpid(currentPid, &theStatus, WNOHANG) == 0)
+        push_back_pid_queue(&currentJob.p_q, currentPid);
+    }
+
+    if (is_empty_pid_queue(&currentJob.p_q))
+    {
+      print_job_bg_complete(currentJob.jobID, atFront, currentJob.cmd);
+    }
+
+    else
+    {
+      push_back_job_queue(&j_q, currentJob);
+    }
+  }
 }
 
 // Prints the job id number, the process id of the first process belonging to
@@ -374,6 +431,15 @@ void create_process(CommandHolder holder)
 // Run a list of commands
 void run_script(CommandHolder *holders)
 {
+
+  if (init == 0)
+  {
+    j_q = new_job_queue(1);
+    init = 1;
+  }
+
+  p_q = new_pid_queue(1);
+
   if (holders == NULL)
     return;
 
@@ -396,14 +462,34 @@ void run_script(CommandHolder *holders)
   {
     // Not a background Job
     // TODO: Wait for all processes under the job to complete
-    IMPLEMENT_ME();
+    // IMPLEMENT_ME();
+
+    while (!is_empty_pid_queue(&p_q))
+    {
+      pid_t currentPid = pop_front_pid_queue(&p_q);
+      int state;
+
+      waitpid(currentPid, &state, 0);
+    }
+
+    destroy_pid_queue(&p_q);
   }
   else
   {
     // A background job.
     // TODO: Push the new job to the job queue
-    IMPLEMENT_ME();
+    // IMPLEMENT_ME();
+    struct theJob currentJob;
+    currentJob.jobID = numOfJob;
 
+    numOfJob = numOfJob + 1;
+
+    currentJob.p_q = p_q;
+    currentJob.pid = peek_back_pid_queue(&p_q);
+    currentJob.cmd = get_command_string();
+
+    push_back_job_queue(&j_q, currentJob);
+    print_job_bg_start(currentJob.jobID, currentJob.pid, currentJob.cmd);
     // TODO: Once jobs are implemented, uncomment and fill the following line
     // print_job_bg_start(job_id, pid, cmd);
   }
