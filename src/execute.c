@@ -6,14 +6,16 @@
  *
  * @note As you add things to this file you may want to change the method signature
  */
-
+#define _GNU_SOURCE
 #include "execute.h"
 #include "command.h"
 
+#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
 #include <fcntl.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 
@@ -70,7 +72,7 @@ void check_jobs_bg_status()
   // TODO: Check on the statuses of all processes belonging to all background
   // jobs. This function should remove jobs from the jobs queue once all
   // processes belonging to a job have completed.
-  IMPLEMENT_ME();
+  // IMPLEMENT_ME();
 
   // TODO: Once jobs are implemented, uncomment and fill the following line
   // print_job_bg_complete(job_id, pid, cmd);
@@ -78,6 +80,7 @@ void check_jobs_bg_status()
 
 // Prints the job id number, the process id of the first process belonging to
 // the Job, and the command string associated with this job
+// leaving as it is
 void print_job(int job_id, pid_t pid, const char *cmd)
 {
   printf("[%d]\t%8d\t%s\n", job_id, pid, cmd);
@@ -85,6 +88,7 @@ void print_job(int job_id, pid_t pid, const char *cmd)
 }
 
 // Prints a start up message for background processes
+// leaving as it is
 void print_job_bg_start(int job_id, pid_t pid, const char *cmd)
 {
   printf("Background job started: ");
@@ -92,6 +96,7 @@ void print_job_bg_start(int job_id, pid_t pid, const char *cmd)
 }
 
 // Prints a completion message followed by the print job
+// leaving as it is
 void print_job_bg_complete(int job_id, pid_t pid, const char *cmd)
 {
   printf("Completed: \t");
@@ -116,9 +121,12 @@ void run_generic(GenericCommand cmd)
   (void)args; // Silence unused variable warning
 
   // TODO: Implement run generic
-  IMPLEMENT_ME();
+  // IMPLEMENT_ME();
 
-  perror("ERROR: Failed to execute program");
+  if (execvp(exec, args) < 0)
+  {
+    perror("ERROR: Failed to execute program");
+  }
 }
 
 // Print strings
