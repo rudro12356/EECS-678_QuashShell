@@ -173,9 +173,12 @@ void run_export(ExportCommand cmd)
 
   // TODO: Implement export.
   // HINT: This should be quite simple.
-  IMPLEMENT_ME();
-
-  setenv(env_var, val, 1);
+  // IMPLEMENT_ME();
+  if (setenv(env_var, val, 1) == -1)
+  {
+    perror("ERROR: Unable to set up the environment!");
+  }
+  // setenv(env_var, val, 1);
 }
 
 // Changes the current working directory
@@ -183,7 +186,7 @@ void run_cd(CDCommand cmd)
 {
   // Get the directory name
   const char *dir = cmd.dir;
-
+  char *varCD;
   // Check if the directory is valid
   if (dir == NULL)
   {
@@ -191,12 +194,16 @@ void run_cd(CDCommand cmd)
     return;
   }
 
+  varCD = get_current_dir_name();
+  setenv("PWD", varCD, 1);
+  free(varCD);
+
   // TODO: Change directory
 
   // TODO: Update the PWD environment variable to be the new current working
   // directory and optionally update OLD_PWD environment variable to be the old
   // working directory.
-  IMPLEMENT_ME();
+  // IMPLEMENT_ME();
 }
 
 // Sends a signal to all processes contained in a job
