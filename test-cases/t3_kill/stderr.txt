@@ -1,32 +1,32 @@
-==48739== Memcheck, a memory error detector
-==48739== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==48739== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
-==48739== Command: /home/r247r798/EECS_678/Quash/EECS-678_QuashShell/quash
-==48739== 
-IMPLEMENT ME: src/execute.c(line 427): create_process()
+==5012== Memcheck, a memory error detector
+==5012== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==5012== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==5012== Command: /home/r247r798/EECS_678/Quash/EECS-678_QuashShell/quash
+==5012== 
+IMPLEMENT ME: src/execute.c(line 430): create_process()
 quash: src/execute.c:31: peek_back_pid_queue: Assertion `!is_empty_pid_queue(deq)' failed.
-==48739== 
-==48739== Process terminating with default action of signal 6 (SIGABRT)
-==48739==    at 0x4E7CE87: raise (raise.c:51)
-==48739==    by 0x4E7E7F0: abort (abort.c:79)
-==48739==    by 0x4E6E3F9: __assert_fail_base (assert.c:92)
-==48739==    by 0x4E6E471: __assert_fail (assert.c:101)
-==48739==    by 0x10A6AF: peek_back_pid_queue (execute.c:31)
-==48739==    by 0x10C210: run_script (execute.c:491)
-==48739==    by 0x109770: main (quash.c:133)
-==48739== 
-==48739== HEAP SUMMARY:
-==48739==     in use at exit: 17,790 bytes in 7 blocks
-==48739==   total heap usage: 11 allocs, 4 frees, 26,254 bytes allocated
-==48739== 
-==48739== LEAK SUMMARY:
-==48739==    definitely lost: 0 bytes in 0 blocks
-==48739==    indirectly lost: 0 bytes in 0 blocks
-==48739==      possibly lost: 0 bytes in 0 blocks
-==48739==    still reachable: 17,790 bytes in 7 blocks
-==48739==         suppressed: 0 bytes in 0 blocks
-==48739== Reachable blocks (those to which a pointer was found) are not shown.
-==48739== To see them, rerun with: --leak-check=full --show-leak-kinds=all
-==48739== 
-==48739== For counts of detected and suppressed errors, rerun with: -v
-==48739== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==5012== 
+==5012== Process terminating with default action of signal 6 (SIGABRT)
+==5012==    at 0x4E7CE87: raise (raise.c:51)
+==5012==    by 0x4E7E7F0: abort (abort.c:79)
+==5012==    by 0x4E6E3F9: __assert_fail_base (assert.c:92)
+==5012==    by 0x4E6E471: __assert_fail (assert.c:101)
+==5012==    by 0x10A6AF: peek_back_pid_queue (execute.c:31)
+==5012==    by 0x10C22E: run_script (execute.c:494)
+==5012==    by 0x109770: main (quash.c:133)
+==5012== 
+==5012== HEAP SUMMARY:
+==5012==     in use at exit: 17,790 bytes in 7 blocks
+==5012==   total heap usage: 11 allocs, 4 frees, 26,254 bytes allocated
+==5012== 
+==5012== LEAK SUMMARY:
+==5012==    definitely lost: 0 bytes in 0 blocks
+==5012==    indirectly lost: 0 bytes in 0 blocks
+==5012==      possibly lost: 0 bytes in 0 blocks
+==5012==    still reachable: 17,790 bytes in 7 blocks
+==5012==         suppressed: 0 bytes in 0 blocks
+==5012== Reachable blocks (those to which a pointer was found) are not shown.
+==5012== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==5012== 
+==5012== For counts of detected and suppressed errors, rerun with: -v
+==5012== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

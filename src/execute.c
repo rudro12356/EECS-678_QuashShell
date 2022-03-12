@@ -103,6 +103,13 @@ void check_jobs_bg_status()
 
   // TODO: Once jobs are implemented, uncomment and fill the following line
   // print_job_bg_complete(job_id, pid, cmd);
+
+  // check if no job exists
+  if (numOfJob == 0)
+  {
+    return;
+  }
+
   int numOfJob = length_job_queue(&j_q);
 
   for (int i = 0; i < numOfJob; i++)

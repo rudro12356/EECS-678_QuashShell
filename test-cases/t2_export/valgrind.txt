@@ -1,21 +1,21 @@
-==48571== Memcheck, a memory error detector
-==48571== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==48571== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
-==48571== Command: /home/r247r798/EECS_678/Quash/EECS-678_QuashShell/quash
-==48571== 
-==48571== 
-==48571== HEAP SUMMARY:
-==48571==     in use at exit: 64 bytes in 1 blocks
-==48571==   total heap usage: 26 allocs, 25 frees, 31,470 bytes allocated
-==48571== 
-==48571== LEAK SUMMARY:
-==48571==    definitely lost: 0 bytes in 0 blocks
-==48571==    indirectly lost: 0 bytes in 0 blocks
-==48571==      possibly lost: 0 bytes in 0 blocks
-==48571==    still reachable: 64 bytes in 1 blocks
-==48571==         suppressed: 0 bytes in 0 blocks
-==48571== Reachable blocks (those to which a pointer was found) are not shown.
-==48571== To see them, rerun with: --leak-check=full --show-leak-kinds=all
-==48571== 
-==48571== For counts of detected and suppressed errors, rerun with: -v
-==48571== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==4894== Memcheck, a memory error detector
+==4894== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==4894== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==4894== Command: /home/r247r798/EECS_678/Quash/EECS-678_QuashShell/quash
+==4894== 
+==4894== 
+==4894== HEAP SUMMARY:
+==4894==     in use at exit: 64 bytes in 1 blocks
+==4894==   total heap usage: 26 allocs, 25 frees, 31,470 bytes allocated
+==4894== 
+==4894== LEAK SUMMARY:
+==4894==    definitely lost: 0 bytes in 0 blocks
+==4894==    indirectly lost: 0 bytes in 0 blocks
+==4894==      possibly lost: 0 bytes in 0 blocks
+==4894==    still reachable: 64 bytes in 1 blocks
+==4894==         suppressed: 0 bytes in 0 blocks
+==4894== Reachable blocks (those to which a pointer was found) are not shown.
+==4894== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==4894== 
+==4894== For counts of detected and suppressed errors, rerun with: -v
+==4894== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
