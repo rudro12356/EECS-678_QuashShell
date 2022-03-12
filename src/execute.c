@@ -23,8 +23,8 @@
 #include "deque.h"
 
 // reading and writing from pipes
-#define READ_END 0
 #define WRITE_END 1
+#define READ_END 0
 
 // making process identifier queue
 IMPLEMENT_DEQUE_STRUCT(pid_queue, pid_t);
@@ -119,7 +119,7 @@ void check_jobs_bg_status()
 
       int theStatus;
 
-      if (waitpid(currentPid, &theStatus, WNOHANG) == 0)
+      if (waitpid(currentPid, &theStatus, 1) == 0)
         push_back_pid_queue(&currentJob.p_q, currentPid);
     }
 
@@ -174,16 +174,19 @@ void run_generic(GenericCommand cmd)
   char **args = cmd.args;
 
   // TODO: Remove warning silencers
-  (void)exec; // Silence unused variable warning
-  (void)args; // Silence unused variable warning
+  //(void)exec; // Silence unused variable warning
+  //(void)args; // Silence unused variable warning
 
   // TODO: Implement run generic
   // IMPLEMENT_ME();
+  execvp(exec, args);
 
-  if (execvp(exec, args) < 0)
-  {
-    perror("ERROR: Failed to execute program");
-  }
+  perror("ERROR: Failed to execute program");
+
+  // if (execvp(exec, args) < 0)
+  // {
+  //   perror("ERROR: Failed to execute program");
+  // }
 }
 
 // Print strings
@@ -192,21 +195,21 @@ void run_echo(EchoCommand cmd)
   // Print an array of strings. The args array is a NULL terminated (last
   // string is always NULL) list of strings.
   // implementing echo - mark
-  IMPLEMENT_ME();
+  // IMPLEMENT_ME();
 
   char **str = cmd.args;
 
-  int k = 1;
+  int j = 1;
 
   // TODO: Remove warning silencers
   //(void)str; // Silence unused variable warning
-  while (cmd.args[k - 1] != NULL)
+  while (cmd.args[j - 1] != NULL)
   {
     printf("%*s%s ", 0, "", *str);
-    *str = cmd.args[k];
+    *str = cmd.args[j];
 
     // incrementing k
-    k++;
+    j++;
   }
 
   // std::cout << endl;
@@ -235,6 +238,8 @@ void run_export(ExportCommand cmd)
   {
     perror("ERROR: Unable to set up the environment!");
   }
+
+  fflush(stdout);
   // setenv(env_var, val, 1);
 }
 
@@ -255,6 +260,7 @@ void run_cd(CDCommand cmd)
   setenv("PWD", varCD, 1);
   free(varCD);
 
+  fflush(stdout);
   // TODO: Change directory
 
   // TODO: Update the PWD environment variable to be the new current working
