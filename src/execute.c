@@ -316,7 +316,10 @@ void run_kill(KillCommand cmd)
 void run_pwd()
 {
   // TODO: Print the current working directory
-  IMPLEMENT_ME();
+  // IMPLEMENT_ME();
+  char currentWorkingDirectory[2000];
+
+  printf("%s\n", getcwd(cwd, sizeof(cwd)));
 
   // Flush the buffer before returning
   fflush(stdout);
@@ -326,8 +329,17 @@ void run_pwd()
 void run_jobs()
 {
   // TODO: Print background jobs
-  IMPLEMENT_ME();
+  // IMPLEMENT_ME();
+  int numJobs = length_job_queue(&j_q);
 
+  // iterate over jobs
+  for (int i = 0; i < numJobs; i++)
+  {
+    struct theJob currJob = pop_front_job_queue(&j_q);
+    // printing job
+    print_job(currJob.jobID, currJob.pid, currJob.cmd);
+    push_back_job_queue(&j_q, currJob);
+  }
   // Flush the buffer before returning
   fflush(stdout);
 }
