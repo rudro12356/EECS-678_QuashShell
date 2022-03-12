@@ -319,7 +319,7 @@ void run_pwd()
   // IMPLEMENT_ME();
   char currentWorkingDirectory[2000];
 
-  printf("%s\n", getcwd(cwd, sizeof(cwd)));
+  printf("%s\n", getcwd(currentWorkingDirectory, sizeof(currentWorkingDirectory)));
 
   // Flush the buffer before returning
   fflush(stdout);
