@@ -282,12 +282,34 @@ void run_kill(KillCommand cmd)
   int signal = cmd.sig;
   int job_id = cmd.job;
 
-  // TODO: Remove warning silencers
-  (void)signal; // Silence unused variable warning
-  (void)job_id; // Silence unused variable warning
+  struct theJob currJob;
 
+  // iterate of length of job q
+  for (int i = 0; i < length_job_queue(&j_q); i++)
+  {
+    // pop job from the front of q
+    currJob = pop_front_job_queue(&j_q);
+
+    if (currJob.jobID == job_id)
+    {
+      pid_queue currPq = currJob.p_q;
+
+      while (length_pid_queue(&currPq) != 0)
+      {
+        pid_t currentPid = pop_front_pid_queue(&currPq);
+        // kill the job process
+        kill(currentPid, signal);
+      }
+    }
+
+    push_back_job_queue(&j_q, currJob);
+  }
+
+  // TODO: Remove warning silencers
+  //(void)signal; // Silence unused variable warning
+  //(void)job_id; // Silence unused variable warning
   // TODO: Kill all processes associated with a background job
-  IMPLEMENT_ME();
+  // IMPLEMENT_ME();
 }
 
 // Prints the current working directory to stdout
