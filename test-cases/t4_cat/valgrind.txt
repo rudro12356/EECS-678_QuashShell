@@ -1,21 +1,21 @@
-==50321== Memcheck, a memory error detector
-==50321== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==50321== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
-==50321== Command: /home/r247r798/EECS_678/Quash/EECS-678_QuashShell/quash
-==50321== 
-==50321== 
-==50321== HEAP SUMMARY:
-==50321==     in use at exit: 64 bytes in 1 blocks
-==50321==   total heap usage: 30 allocs, 29 frees, 31,534 bytes allocated
-==50321== 
-==50321== LEAK SUMMARY:
-==50321==    definitely lost: 0 bytes in 0 blocks
-==50321==    indirectly lost: 0 bytes in 0 blocks
-==50321==      possibly lost: 0 bytes in 0 blocks
-==50321==    still reachable: 64 bytes in 1 blocks
-==50321==         suppressed: 0 bytes in 0 blocks
-==50321== Reachable blocks (those to which a pointer was found) are not shown.
-==50321== To see them, rerun with: --leak-check=full --show-leak-kinds=all
-==50321== 
-==50321== For counts of detected and suppressed errors, rerun with: -v
-==50321== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==58896== Memcheck, a memory error detector
+==58896== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==58896== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==58896== Command: /home/r247r798/EECS_678/Quash/EECS-678_QuashShell/quash
+==58896== 
+==58896== 
+==58896== HEAP SUMMARY:
+==58896==     in use at exit: 64 bytes in 1 blocks
+==58896==   total heap usage: 30 allocs, 29 frees, 31,534 bytes allocated
+==58896== 
+==58896== LEAK SUMMARY:
+==58896==    definitely lost: 0 bytes in 0 blocks
+==58896==    indirectly lost: 0 bytes in 0 blocks
+==58896==      possibly lost: 0 bytes in 0 blocks
+==58896==    still reachable: 64 bytes in 1 blocks
+==58896==         suppressed: 0 bytes in 0 blocks
+==58896== Reachable blocks (those to which a pointer was found) are not shown.
+==58896== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==58896== 
+==58896== For counts of detected and suppressed errors, rerun with: -v
+==58896== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
