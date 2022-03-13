@@ -1,3 +1,0 @@
-0a1,2
-> /home/r247r798/EECS_678/Quash/EECS-678_QuashShell/test-cases/t2_export/sandbox
-> /home/r247r798/EECS_678/Quash/EECS-678_QuashShell/test-cases/t2_export/sandbox

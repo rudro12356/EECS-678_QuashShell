@@ -1,6 +1,12 @@
-0a1,5
+1,4c1,2
+< dir1
+< dir2
+< dir3
+< lorem_ipsum.txt
+---
 > dir3-1
 > dir3-2
-> valgrind_expected.txt
-> /home/r247r798/EECS_678/Quash/EECS-678_QuashShell/test-cases/t2_cd/sandbox/dir3
+6c4
+< /home/r247r798/EECS_678/Quash/EECS-678_QuashShell/test-cases/t2_cd/sandbox
+---
 > /home/r247r798/EECS_678/Quash/EECS-678_QuashShell/test-cases/t2_cd/sandbox/dir3

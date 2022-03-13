@@ -6,6 +6,8 @@
  *
  * @note As you add things to this file you may want to change the method signature
  */
+
+// had to add _GNU_SOURCE to suppress an error message
 #define _GNU_SOURCE
 #include "execute.h"
 #include "command.h"
@@ -46,8 +48,9 @@ IMPLEMENT_DEQUE_STRUCT(job_queue, struct theJob);
 IMPLEMENT_DEQUE(job_queue, struct theJob);
 job_queue j_q;
 
-bool init;
-// static int pipes[2][2];
+int pipes[3][3];
+
+bool helper;
 
 // Remove this and all expansion calls to it
 /**
@@ -107,11 +110,14 @@ void check_jobs_bg_status()
   // check if no job exists
   if (numOfJob == 0)
   {
+    printf("No Jobs found...leaving...");
     return;
   }
 
   int numOfJob = length_job_queue(&j_q);
 
+  // iterate over the number of jobs present
+  // if jobs actually exist
   for (int i = 0; i < numOfJob; i++)
   {
     struct theJob currentJob = pop_front_job_queue(&j_q);
@@ -187,13 +193,7 @@ void run_generic(GenericCommand cmd)
   // TODO: Implement run generic
   // IMPLEMENT_ME();
   execvp(exec, args);
-
   perror("ERROR: Failed to execute program");
-
-  // if (execvp(exec, args) < 0)
-  // {
-  //   perror("ERROR: Failed to execute program");
-  // }
 }
 
 // Print strings
@@ -206,21 +206,12 @@ void run_echo(EchoCommand cmd)
 
   char **str = cmd.args;
 
-  int j = 1;
-
+  for (int j = 0; str[j] != 0; j++)
+  {
+    printf("%s ",str[j]);
+  }
   // TODO: Remove warning silencers
   //(void)str; // Silence unused variable warning
-  while (cmd.args[j - 1] != NULL)
-  {
-    printf("%*s%s ", 0, "", *str);
-    *str = cmd.args[j];
-
-    // incrementing k
-    j++;
-  }
-
-  // std::cout << endl;
-  printf("\n");
 
   // Flush the buffer before returning
   fflush(stdout);
@@ -241,33 +232,43 @@ void run_export(ExportCommand cmd)
   // TODO: Implement export.
   // HINT: This should be quite simple.
   // IMPLEMENT_ME();
-  if (setenv(env_var, val, 1) == -1)
-  {
-    perror("ERROR: Unable to set up the environment!");
-  }
-
-  fflush(stdout);
-  // setenv(env_var, val, 1);
+  setenv(env_var, val, 1);
 }
 
 // Changes the current working directory
 void run_cd(CDCommand cmd)
 {
   // Get the directory name
-  const char *dir = cmd.dir;
-  char *varCD;
-  // Check if the directory is valid
-  if (dir == NULL)
+  //  Check if the directory is valid
+  if (cmd.dir == NULL)
   {
-    perror("ERROR: Failed to resolve path");
+    perror("ERROR: Failed to get path");
+    return;
+  }
+  // change to the old directory
+  if (cmd.dir == -1)
+  {
+    perror("ERROR: ");
     return;
   }
 
-  varCD = get_current_dir_name();
-  setenv("PWD", varCD, 1);
-  free(varCD);
+  if (setenv("PWD", cmd.dir, 1) == -1)
+  {
+    perror("ERROR: ");
+    return;
+  }
 
-  fflush(stdout);
+  if (setenv("OLDPWD", lookup_env("PWD"), 1) == -1)
+  {
+    perror("ERROR: ");
+    return;
+  }
+
+  // varCD = get_current_dir_name();
+  // setenv("PWD", varCD, 1);
+  // free(varCD);
+
+  // //fflush(stdout);
   // TODO: Change directory
 
   // TODO: Update the PWD environment variable to be the new current working
@@ -285,7 +286,7 @@ void run_kill(KillCommand cmd)
   struct theJob currJob;
 
   // iterate of length of job q
-  for (int i = 0; i < length_job_queue(&j_q); i++)
+  for (int m = 0; m < length_job_queue(&j_q); m++)
   {
     // pop job from the front of q
     currJob = pop_front_job_queue(&j_q);
@@ -330,10 +331,10 @@ void run_jobs()
 {
   // TODO: Print background jobs
   // IMPLEMENT_ME();
-  int numJobs = length_job_queue(&j_q);
+  int number = length_job_queue(&j_q);
 
   // iterate over jobs
-  for (int i = 0; i < numJobs; i++)
+  for (int i = 0; i < number ; i++)
   {
     struct theJob currJob = pop_front_job_queue(&j_q);
     // printing job
@@ -450,39 +451,91 @@ void parent_run_command(Command cmd)
  *
  * @sa Command CommandHolder
  */
-void create_process(CommandHolder holder)
+void create_process(CommandHolder holder, int r)
 {
   // Read the flags field from the parser
+  // given to us earlier
   bool p_in = holder.flags & PIPE_IN;
   bool p_out = holder.flags & PIPE_OUT;
   bool r_in = holder.flags & REDIRECT_IN;
   bool r_out = holder.flags & REDIRECT_OUT;
-  bool r_app = holder.flags & REDIRECT_APPEND; // This can only be true if r_out
-                                               // is true
+  bool r_app = holder.flags & REDIRECT_APPEND;
 
   // TODO: Remove warning silencers
-  (void)p_in;  // Silence unused variable warning
-  (void)p_out; // Silence unused variable warning
-  (void)r_in;  // Silence unused variable warning
-  (void)r_out; // Silence unused variable warning
-  (void)r_app; // Silence unused variable warning
+  // commenting the silencers
+  // (void)p_in;  // Silence unused variable warning
+  // (void)p_out; // Silence unused variable warning
+  // (void)r_in;  // Silence unused variable warning
+  // (void)r_out; // Silence unused variable warning
+  // (void)r_app; // Silence unused variable warning
 
-  // TODO: Setup pipes, redirects, and new process
-  IMPLEMENT_ME();
+  int read_end = (r - 1) % 2;
+  int write_end = r % 2;
 
-  // parent_run_command(holder.cmd); // This should be done in the parent branch of
-  //  a fork
-  // child_run_command(holder.cmd); // This should be done in the child branch of a fork
+  if (p_out)
+  {
+    pipe(pipes[write_end]);
+  }
+
+  // using the fork system for creating new process that's called the child process
+  pid_t pid = fork();
+
+  push_back_pid_queue(&p_q, pid);
+  if (pid == 0)
+  {
+    // we will be using pipes here now
+    // pipes was created in the very top
+    if (p_in)
+    {
+      // dup system creates a constructor for us
+      dup2(pipes[read_end][READ_END], STDIN_FILENO);
+      close(pipes[read_end][READ_END]);
+    }
+    if (p_out)
+    {
+      dup2(pipes[write_end][WRITE_END], STDOUT_FILENO);
+      close(pipes[write_end][WRITE_END]);
+    }
+    if (r_in)
+    {
+      FILE *file = fopen(holder.redirect_in, "r");
+      dup2(fileno(file), STDIN_FILENO);
+    }
+    if (r_out)
+    {
+      if (r_app)
+      {
+        FILE *file = fopen(holder.redirect_out, "a");
+        dup2(fileno(file), STDOUT_FILENO);
+      }
+      else
+      {
+        FILE *file = fopen(holder.redirect_out, "w");
+        dup2(fileno(file), STDOUT_FILENO);
+      }
+    }
+
+    child_run_command(holder.cmd);
+    exit(EXIT_SUCCESS);
+  }
+  else if (p_out)
+  {
+    close(pipes[write_end][WRITE_END]);
+  }
+
+  else
+  {
+    parent_run_command(holder.cmd);
+  }
 }
-
 // Run a list of commands
 void run_script(CommandHolder *holders)
 {
 
-  if (init == 0)
+  if (helper == 0)
   {
     j_q = new_job_queue(1);
-    init = 1;
+    helper = 1;
   }
 
   p_q = new_pid_queue(1);
@@ -503,7 +556,7 @@ void run_script(CommandHolder *holders)
 
   // Run all commands in the `holder` array
   for (int i = 0; (type = get_command_holder_type(holders[i])) != EOC; ++i)
-    create_process(holders[i]);
+    create_process(holders[i], i);
 
   if (!(holders[0].flags & BACKGROUND))
   {
@@ -516,6 +569,7 @@ void run_script(CommandHolder *holders)
       pid_t currentPid = pop_front_pid_queue(&p_q);
       int state;
 
+      // returns the status on the immediate child process
       waitpid(currentPid, &state, 0);
     }
 
@@ -529,15 +583,15 @@ void run_script(CommandHolder *holders)
     struct theJob currentJob;
     currentJob.jobID = numOfJob;
 
-    numOfJob = numOfJob + 1;
+    numOfJob++;
 
     currentJob.p_q = p_q;
     currentJob.pid = peek_back_pid_queue(&p_q);
     currentJob.cmd = get_command_string();
 
-    push_back_job_queue(&j_q, currentJob);
-    print_job_bg_start(currentJob.jobID, currentJob.pid, currentJob.cmd);
     // TODO: Once jobs are implemented, uncomment and fill the following line
     // print_job_bg_start(job_id, pid, cmd);
+    push_back_job_queue(&j_q, currentJob);
+    print_job_bg_start(currentJob.jobID, currentJob.pid, currentJob.cmd);
   }
 }

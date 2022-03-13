@@ -1,0 +1,7 @@
+dir1
+dir2
+dir3
+lorem_ipsum.txt
+valgrind_expected.txt
+/home/r247r798/EECS_678/Quash/EECS-678_QuashShell/test-cases/t2_cd/sandbox
+/home/r247r798/EECS_678/Quash/EECS-678_QuashShell/test-cases/t2_cd/sandbox/dir3 
